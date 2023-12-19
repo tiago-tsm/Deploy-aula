@@ -22,6 +22,28 @@ app.get('/', async (req, res) => {
 	}
 })
 
+
+app.post('/', async (req, res) => {
+	const {modelo } = req.body;
+
+	try {
+		const carros  = await knex('carros')
+		.insert({ modelo})
+      .returning("*");
+	  if (carros.length === 0) {
+		return res.status(400).json("Não foi possivel cadastrar o usuario");
+	  }
+  
+	  return res.status(200).json(carros[0]);
+		
+	} catch (error) {
+		
+		return res.status(500).json({mensagem: "Erro do servidor "})
+		
+	}
+})
+
+
 const port = process.env.PORT || 3000
 
 app.listen(port, () => {
